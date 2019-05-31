@@ -171,5 +171,11 @@ namespace HouseholdBudgeter_Mvc.Controllers
             return View("GetHouseholdMembers", model);
         }
 
+        [HttpGet]
+        public ActionResult EmailInvitation(int? id)
+        {
+            return View();
+        }
+
     }
 }

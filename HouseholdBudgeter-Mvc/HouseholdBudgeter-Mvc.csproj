@@ -1898,6 +1898,7 @@
     <Content Include="vendor\jquery\jquery.min.map" />
     <Content Include="vendor\jquery\jquery.slim.min.map" />
     <Content Include="Views\Household\GetHouseholdMembers.cshtml" />
+    <Content Include="Views\Household\EmailInvitation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
