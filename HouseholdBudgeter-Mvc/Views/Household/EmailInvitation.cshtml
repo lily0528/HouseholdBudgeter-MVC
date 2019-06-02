@@ -1,7 +1,40 @@
-﻿
+﻿@model InvitationBindingModelcs
 @{
     ViewBag.Title = "EmailInvitation";
 }
 
-<h2>EmailInvitation</h2>
 
+<div class="row">
+    <div class="col-lg-11">
+        <div class="card mb-8">
+            <div class="card-header">
+                <i class="fas fa-angle-down"></i>
+                Invite users to join household
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Email, "User Email:")
+                        @Html.TextBoxFor(p => p.Email, new { @class = "form-control", placeholder = "Email" })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+
+                    </div>
+                    @*<div class="form-group">
+                        @Html.LabelFor(p => p.HouseholdId, "HouseholdId:")
+                        @Html.TextAreaFor(p => p.HouseholdId, new { @class = "form-control", placeholder = "Description", rows = 5, columns = 5 })
+                        @Html.ValidationMessageFor(model => model.HouseholdId, "", new { @class = "text-danger" })
+                    </div>*@
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="card-footer small text-muted">@DateTime.Now</div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -57,7 +57,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<RegisterBindingModel>(data);
-                //Todo: No data return
+                return RedirectToAction("Login", "UserManagement");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -103,18 +103,44 @@ namespace HouseholdBudgeter_Mvc.Controllers
             var encodedValues = new FormUrlEncodedContent(parameters);
 
             var response = httpClient.PostAsync(url, encodedValues).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
 
-            var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<LoginData>(data);
 
-            var result = JsonConvert.DeserializeObject<LoginData>(data);
+                // Session["Token"] = result.AccessToken;
 
-            // Session["Token"] = result.AccessToken;
+                var cookie = new HttpCookie("MyCookie");
+                cookie.Values.Add("AccessToken", result.AccessToken);
+                cookie.Values.Add("Username", result.Username);
 
-            var cookie = new HttpCookie("MyCookie", result.AccessToken);
+                Response.Cookies.Add(cookie);
 
-            Response.Cookies.Add(cookie);
+                return RedirectToAction("GetHouseholds", "Household");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
 
-            return RedirectToAction("GetHouseholds", "Household");
+                return View("informationError", result);
+            }
+            return View("Error");
+        }
+
+        [HttpPost]
+        public ActionResult LogOff(/*string returnUrl*/)
+        {
+            if (Request.Cookies["MyCookie"] != null)
+            {
+                var c = new HttpCookie("MyCookie");
+                // set cookie as expired, then the browser will log the user off.
+                c.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(c);
+                return RedirectToAction("Login", "UserManagement");
+            }
+            return HttpNotFound();
         }
 
         public ActionResult ChangePassword()
@@ -135,7 +161,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 return View();
             }
 
-            var token = cookie.Value;
+            var token = cookie.Values["AccessToken"];
             var url = "http://localhost:64873/api/Account/ChangePassword";
             var httpClient = new HttpClient();
 
@@ -158,8 +184,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
              
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ChangePasswordBindingModel>(data);
-                //Todo: return page
-                return View();
+                return RedirectToAction("Login", "UserManagement");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -202,8 +227,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ForgotPasswordViewModel>(data);
-                //Todo: return page
-                return View();
+                return RedirectToAction("ResetPassword", "UserManagement");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
@@ -250,8 +274,11 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ResetPasswordViewModel>(data);
-                //Todo: return page
-                return View();
+                return RedirectToAction("Login", "UserManagement");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return View("NotFound");
             }
             return View();
         }

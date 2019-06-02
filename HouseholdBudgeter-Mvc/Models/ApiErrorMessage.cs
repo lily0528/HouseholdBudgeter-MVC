@@ -7,7 +7,7 @@ namespace HouseholdBudgeter_Mvc.Models
 {
     public class ApiErrorMessage
     {
-        public string message { get; set; }
+        public string Message { get; set; }
         public Dictionary<string, string[]> ModelState { get; set; }
     }
 }

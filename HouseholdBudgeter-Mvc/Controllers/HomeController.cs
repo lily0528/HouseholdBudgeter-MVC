@@ -10,7 +10,14 @@ namespace HouseholdBudgeter_Mvc.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (Request.Cookies["MyCookie"]?.Values["AccessToken"] != null)
+            { 
+            return RedirectToAction("GetHouseholds", "Household");
+            }
+            else
+            {
+                return RedirectToAction("Login", "UserManagement");
+            }
         }
 
         public ActionResult About()

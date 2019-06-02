@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "JoinHousehold";
+}
+
+<h2>JoinHousehold</h2>
+
+<div class="row">
+    <div class="col-lg-11">
+        <div class="card mb-8">
+            <div class="card-header">
+                <i class="fas fa-angle-down"></i>
+                Edit Household
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <input type="text" placeholder="Household Id" name="id" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="card-footer small text-muted">@DateTime.Now</div>
+        </div>
+    </div>
+</div>

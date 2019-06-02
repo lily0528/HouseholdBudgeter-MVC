@@ -126,11 +126,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\IdentityHelper.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApiErrorMessage.cs" />
     <Compile Include="Models\Household\HouseholdBindingModel.cs" />
     <Compile Include="Models\Household\HouseholdView.cs" />
+    <Compile Include="Models\Household\InvitationBindingModelcs.cs" />
     <Compile Include="Models\Household\UsersView.cs" />
     <Compile Include="Models\LoginData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1899,6 +1901,9 @@
     <Content Include="vendor\jquery\jquery.slim.min.map" />
     <Content Include="Views\Household\GetHouseholdMembers.cshtml" />
     <Content Include="Views\Household\EmailInvitation.cshtml" />
+    <Content Include="Views\Household\JoinHousehold.cshtml" />
+    <Content Include="Views\Shared\InformationError.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

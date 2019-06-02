@@ -57,9 +57,10 @@
                                         <a href="@Url.Action("EmailInvitation", "Household", new { id = record.Id })">
                                             <i class="fas fa-archive"></i>
                                         </a>
-                                        @*<a href="@Url.Action("AcceptInvitation", "Household", new { id = record.Id })">
-                                            <i class="fas fa-archive"></i>
-                                        </a>*@
+                                        <span> &emsp;</span>
+                                        <a href="@Url.Action("Leave", "Household", new { id = record.Id })">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             }

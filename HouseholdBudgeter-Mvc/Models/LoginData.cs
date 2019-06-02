@@ -10,5 +10,6 @@ namespace HouseholdBudgeter_Mvc.Models
     {
         [JsonProperty("access_token")]
         public string AccessToken { get; set; }
+        public string Username { get; set; }
     }
 }
