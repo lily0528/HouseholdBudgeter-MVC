@@ -16,7 +16,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
         {
             return View();
         }
-    [AllowAnonymous]
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult Register()
         {
@@ -135,7 +135,6 @@ namespace HouseholdBudgeter_Mvc.Controllers
             if (Request.Cookies["MyCookie"] != null)
             {
                 var c = new HttpCookie("MyCookie");
-                // set cookie as expired, then the browser will log the user off.
                 c.Expires = DateTime.Now.AddDays(-1);
                 Response.Cookies.Add(c);
                 return RedirectToAction("Login", "UserManagement");
@@ -165,7 +164,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             var url = "http://localhost:64873/api/Account/ChangePassword";
             var httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {token}");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var OldPassword = model.OldPassword;
             var newPassword = model.NewPassword;
@@ -181,7 +180,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-             
+
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ChangePasswordBindingModel>(data);
                 return RedirectToAction("Login", "UserManagement");
@@ -282,6 +281,5 @@ namespace HouseholdBudgeter_Mvc.Controllers
             }
             return View();
         }
-
     }
 }
