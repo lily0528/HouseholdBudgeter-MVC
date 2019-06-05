@@ -1,0 +1,52 @@
+﻿
+@model CategoryBindingModel
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<div class="row">
+    <div class="col-lg-11">
+        <div class="card mb-8">
+            <div class="card-header">
+                <i class="fas fa-angle-down"></i>
+                Create Category
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(Model => Model.Household, "Household:")
+                        @Html.DropDownList("HouseholdId", Model.Household, "--Select Household--", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(Model => Model.HouseholdId, "", new { @class = "text-danger" })
+                    </div>
+                    @*<div class="form-group">
+            @Html.LabelFor(p => p.HouseholdId, "Household Id:")
+            @Html.TextBoxFor(p => p.HouseholdId, new { @class = "form-control", placeholder = "Household Id" })
+            @Html.ValidationMessageFor(model => model.HouseholdId, "", new { @class = "text-danger" })
+        </div>*@
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Name, "Category Name:")
+                        @Html.TextBoxFor(p => p.Name, new { @class = "form-control", placeholder = "Category Name" })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Description, "Description:")
+                        @Html.TextAreaFor(p => p.Description, new { @class = "form-control", placeholder = "Description", rows = 5, columns = 5 })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="card-footer small text-muted">@DateTime.Now</div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

@@ -101,5 +101,5 @@ namespace HouseholdBudgeter_Mvc.Models
         public string ConfirmPassword { get; set; }
     }
 
-    
+
 }

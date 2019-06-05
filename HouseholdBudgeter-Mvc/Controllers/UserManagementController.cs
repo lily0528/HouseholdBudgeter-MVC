@@ -27,8 +27,12 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public ActionResult Register(RegisterBindingModel model)
+        public ActionResult Register(RegisterViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             //Url and parameters to post
             var url = "http://localhost:64873/api/Account/Register";
             var UserName = model.Email;
@@ -55,19 +59,27 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<RegisterBindingModel>(data);
-                return RedirectToAction("Login", "UserManagement");
+                TempData["Message"] = "Your account has been created successfully!";
+                return RedirectToAction("Login");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
-                return View();
+                foreach (var key in result.ModelState)
+                {
+                    foreach(var error in key.Value)
+                    {
+                        ModelState.AddModelError(key.Key, error);
+                    }
+                }
+                return View(model);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
-                return View("Error");
+                ModelState.AddModelError("", "An unexpected error has occured!");
+                return View(model);
+
             }
             return View();
         }
@@ -85,7 +97,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
             var url = "http://localhost:64873/token";
 
@@ -134,14 +146,15 @@ namespace HouseholdBudgeter_Mvc.Controllers
         {
             if (Request.Cookies["MyCookie"] != null)
             {
-                var c = new HttpCookie("MyCookie");
-                c.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(c);
+                var cookie = new HttpCookie("MyCookie");
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(cookie);
                 return RedirectToAction("Login", "UserManagement");
             }
             return HttpNotFound();
         }
 
+        [HttpGet]
         public ActionResult ChangePassword()
         {
             return View();
@@ -153,11 +166,15 @@ namespace HouseholdBudgeter_Mvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordBindingModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             var cookie = Request.Cookies["MyCookie"];
 
             if (cookie == null)
             {
-                return View();
+                return RedirectToAction("Login");
             }
 
             var token = cookie.Values["AccessToken"];
@@ -181,8 +198,9 @@ namespace HouseholdBudgeter_Mvc.Controllers
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
 
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ChangePasswordBindingModel>(data);
+                //var data = response.Content.ReadAsStringAsync().Result;
+                //var result = JsonConvert.DeserializeObject<ChangePasswordBindingModel>(data);
+                ViewBag.Message = "Password has been changed successfully";
                 return RedirectToAction("Login", "UserManagement");
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)

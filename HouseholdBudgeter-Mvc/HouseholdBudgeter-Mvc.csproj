@@ -120,6 +120,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BankAccountController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HouseholdController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
@@ -130,9 +132,15 @@
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApiErrorMessage.cs" />
+    <Compile Include="Models\BankAccount\BankAccountBindingModel.cs" />
+    <Compile Include="Models\BankAccount\BankAccountView.cs" />
+    <Compile Include="Models\Categories\CategoryBindingModel.cs" />
+    <Compile Include="Models\Categories\CategoryView.cs" />
+    <Compile Include="Models\Categories\EditCategoryModel.cs" />
     <Compile Include="Models\Household\HouseholdBindingModel.cs" />
     <Compile Include="Models\Household\HouseholdView.cs" />
     <Compile Include="Models\Household\InvitationBindingModelcs.cs" />
+    <Compile Include="Models\Household\InviteViewModel.cs" />
     <Compile Include="Models\Household\UsersView.cs" />
     <Compile Include="Models\LoginData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1904,9 +1912,15 @@
     <Content Include="Views\Household\JoinHousehold.cshtml" />
     <Content Include="Views\Shared\InformationError.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\GetCategory.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\BankAccount\Create.cshtml" />
+    <Content Include="Views\BankAccount\GetBankAccounts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

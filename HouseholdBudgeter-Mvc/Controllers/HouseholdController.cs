@@ -21,6 +21,11 @@ namespace HouseholdBudgeter_Mvc.Controllers
         [HttpGet]
         public ActionResult Create()
         {
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("login", "UserManagement");
+            }
             return View();
         }
 
@@ -29,12 +34,12 @@ namespace HouseholdBudgeter_Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
             var cookie = Request.Cookies["MyCookie"];
             if (cookie == null)
             {
-                return View();
+                return RedirectToAction("login", "UserManagement");
             }
 
             var token = cookie.Values["AccessToken"];
@@ -82,10 +87,18 @@ namespace HouseholdBudgeter_Mvc.Controllers
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
-            var data = httpClient.GetStringAsync(url).Result;
-
-            var model = JsonConvert.DeserializeObject<List<HouseholdView>>(data);
-            return View("GetHouseholds", model);
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var households = JsonConvert.DeserializeObject<List<HouseholdView>>(data);
+                return View(households);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+                return View();
+            }
         }
 
         [HttpGet]
@@ -115,12 +128,12 @@ namespace HouseholdBudgeter_Mvc.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                return View(model);
             }
             var cookie = Request.Cookies["MyCookie"];
             if (cookie == null)
             {
-                return View();
+                return RedirectToAction("login", "UserManagement");
             }
 
             var token = cookie.Values["AccessToken"];
@@ -143,8 +156,8 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 var data = response.Content.ReadAsStringAsync().Result;
                 return RedirectToAction(nameof(HouseholdController.GetHouseholds));
             }
- 
-                return View("Error");
+
+            return View("Error");
         }
 
         [HttpGet]
@@ -221,15 +234,44 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
-                return View("informationError",result);
+                return View("informationError", result);
             }
-                return View("Error");
+            return View("Error");
         }
 
         [HttpGet]
         public ActionResult JoinHousehold()
         {
-            return View();
+
+            var cookie = Request.Cookies["MyCookie"];
+
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var token = cookie.Values["AccessToken"];
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization",
+                $"Bearer {token}");
+
+            var response = httpClient
+                .GetAsync($"http://localhost:64873/api/Invitation/getinvites")
+                .Result;
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+
+                var result = JsonConvert.DeserializeObject<List<InviteViewModel>>(data);
+
+                return View(result);
+            }
+            else
+            {
+                return RedirectToAction("GetHouseholds");
+            }
+
         }
 
         [HttpPost]
@@ -254,18 +296,37 @@ namespace HouseholdBudgeter_Mvc.Controllers
             parameters.Add(new KeyValuePair<string, string>("householdId", id.ToString()));
             var encodedParameters = new FormUrlEncodedContent(parameters);
             var response = httpClient.PostAsync(url, encodedParameters).Result;
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var data = response.Content.ReadAsStringAsync().Result;
-                return RedirectToAction("GetHouseholds", "Household");
+                return RedirectToAction("GetHouseholds");
             }
-            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
-                return View("informationError", result);
+
+                var errors = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+
+                foreach (var key in errors.ModelState)
+                {
+                    foreach (var error in key.Value)
+                    {
+                        ModelState.AddModelError(key.Key, error);
+                    }
+                }
+
+                return View();
             }
-            return View("Error");
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                TempData["Message"] = "It looks like this household was deleted";
+                return RedirectToAction("GetHouseholds");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+                return View();
+            }
         }
 
         [HttpGet]
@@ -290,7 +351,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             parameters.Add(new KeyValuePair<string, string>("householdId", id.ToString()));
             var encodedParameters = new FormUrlEncodedContent(parameters);
             var response = httpClient.PostAsync(url, encodedParameters).Result;
-           
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var data = response.Content.ReadAsStringAsync().Result;
@@ -302,14 +363,47 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
 
-                return View("informationError",result);
+                return View("informationError", result);
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return View("NotFound");
             }
             return View("Error");
-           
+        }
+
+   
+        public ActionResult Delete(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction(nameof(HouseholdController.GetHouseholds));
+            }
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return View();
+            }
+            var token = cookie.Values["AccessToken"];
+            var url = $"http://localhost:64873/api/Household/Delete/{id}";
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = httpClient.DeleteAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("GetHouseholds");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+                return View("informationError", result);
+            }
+            else
+            {
+                return RedirectToAction("GetHouseholds");
+            }
+
         }
     }
 }

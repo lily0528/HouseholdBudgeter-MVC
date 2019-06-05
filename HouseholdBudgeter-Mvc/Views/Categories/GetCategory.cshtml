@@ -1,15 +1,10 @@
-﻿
-@model List<HouseholdView>
+﻿@model List<CategoryView>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "GetCategory";
 }
-@if (TempData["Message"] != null)
 
-{
+<h2>Category</h2>
 
-    <div class="alert alert-danger">@TempData["Message"]</div>
-
-}
 <div id="content-wrapper">
     <div class="container-fluid">
         <!-- DataTables Example -->
@@ -24,58 +19,46 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead class="card-header">
                             <tr>
+                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>NumberOfUsers</th>
-                                <th>Created</th>
-                                <th>Updated</th>
+                                <th>HouseholdId</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
+                                <th>Id</th>
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>NumberOfUsers</th>
-                                <th>Created</th>
-                                <th>Updated</th>
+                                <th>HouseholdId</th>
                                 <th></th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @foreach (var record in Model)
                             {
-                                <tr>
-                                    <td>@record.Name</td>
-                                    <td>@record.Description</td>
-                                    <td><a href="@Url.Action("GetHouseholdMembers", "Household", new { id = record.Id })">@record.NumberOfUsers</a></td>
-                                    <td>@record.Created</td>
-                                    <td>@record.Updated</td>
-                                    <td>
-                                        @if (record.IsOwner)
-                                        {
-                                            <a href="@Url.Action("EditHousehold", "Household", new { id = record.Id })"><i class="far fa-edit"></i></a>
-                                            <span> &emsp;</span>
-                                            <a href="@Url.Action("EmailInvitation", "Household", new { id = record.Id })">
-                                                <i class="fas fa-archive"></i>
-                                            </a>
-                                            <span> &emsp;</span>
-                                            <a href="@Url.Action("Delete", "Household", new { id = record.Id })">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        }
+                            <tr>
+                                <td>@record.Id</td>
+                                <td>@record.Name</td>
+                                <td>@record.Description</td>
+                                <td>@record.HouseholdId</td>
+                                <td>
+                                    @if (record.IsOwner)
+                                    {
+                                        <a href="@Url.Action("Edit", "Categories", new { id = record.Id })"><i class="far fa-edit"></i></a>
                                         <span> &emsp;</span>
-                                        <a href="@Url.Action("Leave", "Household", new { id = record.Id })">
-                                            <i class="fas fa-sign-out-alt"></i>
+                                        <a href="@Url.Action("Delete", "Categories", new { id = record.Id })">
+                                            <i class="fas fa-trash-alt"></i>
                                         </a>
+                                    }
                                     </td>
-                                </tr>
+                            </tr>
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
     </div>
     <!-- /.container-fluid -->
