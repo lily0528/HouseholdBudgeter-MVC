@@ -48,7 +48,6 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
                 return View();
             }
-           
         }
 
         [HttpPost]
@@ -241,7 +240,8 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 return RedirectToAction("GetCategory");
             }
-
         }
+
+
     }
 }

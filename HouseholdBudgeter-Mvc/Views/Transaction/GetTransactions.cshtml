@@ -1,9 +1,9 @@
-﻿@model  List<BankAccountView>
+﻿@model  List<TransactionView>
 @{
-    ViewBag.Title = "GetBankAccount";
+    ViewBag.Title = "GetTransactions";
 }
 
-<h2>Bank Account</h2>
+<h2>Transactions</h2>
 
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -20,20 +20,22 @@
                         <thead class="card-header">
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
+                                <th>Title</th>
                                 <th>Description</th>
-                                <th>Balance</th>
-                                <th>HouseholdId</th>
+                                <th>Amount</th>
+                                <th>BankAccountName</th>
+                                <th>CategoryName</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
+                                <th>Title</th>
                                 <th>Description</th>
-                                <th>Balance</th>
-                                <th>HouseholdId</th>
+                                <th>Amount</th>
+                                <th>BankAccountName</th>
+                                <th>CategoryName</th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -42,17 +44,21 @@
                             {
                             <tr>
                                 <td>@record.Id</td>
-                                <td>@record.Name</td>
+                                <td>@record.Title</td>
                                 <td>@record.Description</td>
-                                <td>@record.Balance</td>
-                                <td>@record.HouseholdId</td>
+                                <td>@record.Amount</td>
+                                <td>@record.BankAccountName</td>
+                                <td>@record.CategoryName</td>
                                 <td>
                                     @if (record.IsOwner)
                                     {
-                                        <a href="@Url.Action("Edit", "BankAccount", new { id = record.Id })"><i class="far fa-edit"></i></a>
+                                        <a href="@Url.Action("Edit", "Transaction", new { id = record.Id })"><i class="far fa-edit"></i></a>
                                         <span> &emsp;</span>
-                                        <a href="@Url.Action("Delete", "BankAccount", new { id = record.Id })">
+                                        <a href="@Url.Action("Delete", "Transaction", new { id = record.Id })">
                                             <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                        <a href="@Url.Action("VoidTransaction", "Transaction", new { id = record.Id })">
+                                            <i class="fas fa-video-slash"></i>
                                         </a>
                                     }
                                 </td>

@@ -1,30 +1,27 @@
-﻿
-@model CategoryBindingModel
+﻿@model BankAccountBindingModel
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
 }
 
-<h2>Create</h2>
-
+<h2>Edit</h2>
 <div class="row">
     <div class="col-lg-11">
         <div class="card mb-8">
             <div class="card-header">
                 <i class="fas fa-angle-down"></i>
-                Create Category
+                Create Bank Account
             </div>
             <div class="card-body">
                 <form method="post">
                     @Html.AntiForgeryToken()
                     <div class="form-group">
-                        @Html.LabelFor(Model => Model.Household, "Household:")
-                        @Html.DropDownList("HouseholdId", Model.Household, "--Select Household--", htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(Model => Model.HouseholdId, "", new { @class = "text-danger" })
+                        @Html.LabelFor(p => p.HouseholdId, "Household Id:")
+                        @Html.TextBoxFor(p => p.HouseholdId, new { @class = "form-control", placeholder = "Household Id" })
+                        @Html.ValidationMessageFor(model => model.HouseholdId, "", new { @class = "text-danger" })
                     </div>
-
                     <div class="form-group">
-                        @Html.LabelFor(p => p.Name, "Category Name:")
-                        @Html.TextBoxFor(p => p.Name, new { @class = "form-control", placeholder = "Category Name" })
+                        @Html.LabelFor(p => p.Name, "Account Name:")
+                        @Html.TextBoxFor(p => p.Name, new { @class = "form-control", placeholder = "Account Name" })
                         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
@@ -45,4 +42,3 @@
 @section scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
-

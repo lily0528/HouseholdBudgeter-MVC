@@ -48,12 +48,10 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
                 return View();
             }
-
         }
 
         [HttpPost]
         public ActionResult Create(BankAccountBindingModel model)
-
         {
             var cookie = Request.Cookies["MyCookie"];
             if (cookie == null)
@@ -74,6 +72,88 @@ namespace HouseholdBudgeter_Mvc.Controllers
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
             var response = httpClient.PostAsync("http://localhost:64873/api/BankAccount/create", encodedParameters).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("GetBankAccounts");
+            }
+
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var errors = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+                foreach (var key in errors.ModelState)
+                {
+                    foreach (var error in key.Value)
+                    {
+                        ModelState.AddModelError(key.Key, error);
+                    }
+                }
+                return View(model);
+            }
+            else
+            {
+                ModelState.AddModelError("", "An unexpected error has occured. Please try again later");
+                return View(model);
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult Edit(int id)
+        {
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var token = cookie.Values["AccessToken"];
+            var httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = httpClient.GetAsync($"http://localhost:64873/api/BankAccount/Edit/{id}").Result;
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<BankAccountView>(data);
+                if (!result.IsOwner)
+                {
+                    return RedirectToAction("GetCategory");
+                }
+                var editViewModel = new BankAccountBindingModel();
+                editViewModel.HouseholdId = result.HouseholdId;
+                editViewModel.Name = result.Name;
+                editViewModel.Description = result.Description;
+                return View(editViewModel);
+            }
+            else
+            {
+                return RedirectToAction("GetCategory");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, EditBankAccountModel model)
+        {
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var token = cookie.Values["AccessToken"];
+            var parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("HouseholdId", model.HouseholdId.ToString()));
+            parameters.Add(new KeyValuePair<string, string>("Name", model.Name));
+            parameters.Add(new KeyValuePair<string, string>("Description", model.Description));
+            var encodedParameters = new FormUrlEncodedContent(parameters);
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.PutAsync($"http://localhost:64873/api/BankAccount/Edit/{id}", encodedParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 return RedirectToAction("GetBankAccounts");
@@ -124,6 +204,38 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
                 return View();
+            }
+        }
+
+        public ActionResult Delete(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("GetCategory");
+            }
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return View();
+            }
+            var token = cookie.Values["AccessToken"];
+            var url = $"http://localhost:64873/api/BankAccount/Delete/{id}";
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = httpClient.DeleteAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return RedirectToAction("GetBankAccounts");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+                return View("informationError", result);
+            }
+            else
+            {
+                return RedirectToAction("GetBankAccounts");
             }
         }
     }
