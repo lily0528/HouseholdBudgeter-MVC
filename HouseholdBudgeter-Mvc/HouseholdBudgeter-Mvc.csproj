@@ -136,19 +136,26 @@
     <Compile Include="Models\BankAccount\BankAccountBindingModel.cs" />
     <Compile Include="Models\BankAccount\BankAccountView.cs" />
     <Compile Include="Models\BankAccount\EditBankAccountModel.cs" />
+    <Compile Include="Models\BankAccount\ViewBankAccountView.cs" />
     <Compile Include="Models\Categories\CategoryBindingModel.cs" />
     <Compile Include="Models\Categories\CategoryView.cs" />
     <Compile Include="Models\Categories\EditCategoryModel.cs" />
+    <Compile Include="Models\Household\CategoryGroupView.cs" />
+    <Compile Include="Models\Household\HouseholdBankAccountTransactionDetailView.cs" />
+    <Compile Include="Models\Household\HouseholdBankSummaryViewModel.cs" />
+    <Compile Include="Models\Household\HouseholdBankAccountDetailView.cs" />
     <Compile Include="Models\Household\HouseholdBindingModel.cs" />
     <Compile Include="Models\Household\HouseholdView.cs" />
     <Compile Include="Models\Household\InvitationBindingModelcs.cs" />
     <Compile Include="Models\Household\InviteViewModel.cs" />
     <Compile Include="Models\Household\UsersView.cs" />
     <Compile Include="Models\LoginData.cs" />
+    <Compile Include="Models\Transaction\householdSelectView.cs" />
     <Compile Include="Models\Transaction\TransactionView.cs" />
     <Compile Include="Models\Transaction\TransactionBindingModel.cs" />
     <Compile Include="Models\Transaction\EditTransactionBindingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Transaction\HouseholdBankAccountTransactionDetailView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -1926,6 +1933,10 @@
     <Content Include="Views\Transaction\Create.cshtml" />
     <Content Include="Views\Transaction\GetTransactions.cshtml" />
     <Content Include="Views\Transaction\Edit.cshtml" />
+    <Content Include="Views\Transaction\BankAccountDetails.cshtml" />
+    <Content Include="Views\Transaction\TransactionDetails.cshtml" />
+    <Content Include="Views\Household\Summary.cshtml" />
+    <Content Include="Views\Transaction\CreateByHouseholdId.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

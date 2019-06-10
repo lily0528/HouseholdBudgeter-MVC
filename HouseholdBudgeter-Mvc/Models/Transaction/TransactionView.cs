@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace HouseholdBudgeter_Mvc.Models.Transaction
 {
@@ -20,5 +21,7 @@ namespace HouseholdBudgeter_Mvc.Models.Transaction
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public bool IsOwner { get; set; }
+
+      
     }
 }

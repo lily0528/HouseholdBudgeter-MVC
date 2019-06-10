@@ -1,0 +1,77 @@
+﻿@model  HouseholdBankSummaryViewModel
+@{
+    ViewBag.Title = "Summary";
+}
+
+<h2>Summary</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Balance
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bankAccount in Model.BankAccounts)
+        {
+            <tr>
+                <td>
+                    @bankAccount.Id
+                </td>
+                <td>
+                    @bankAccount.Name
+                </td>
+                <td>
+                    @bankAccount.Balance
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Total Balance</h3>
+<p>@Model.TotalBalance</p>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Sum
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>
+                    @category.Id
+                </td>
+                <td>
+                    @category.Name
+                </td>
+                <td>
+                    @category.Sum
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Total Sum</h3>
+<p>@Model.TotalSum</p>

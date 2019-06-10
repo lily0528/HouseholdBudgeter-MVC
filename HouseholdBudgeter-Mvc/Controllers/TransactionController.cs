@@ -3,6 +3,7 @@ using HouseholdBudgeter_Mvc.Models.BankAccount;
 using HouseholdBudgeter_Mvc.Models.Categories;
 using HouseholdBudgeter_Mvc.Models.Household;
 using HouseholdBudgeter_Mvc.Models.Transaction;
+
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,92 @@ namespace HouseholdBudgeter_Mvc.Controllers
         }
 
         [HttpGet]
-        public ActionResult Create()
+        public ActionResult CreateByHouseholdId()
+        {
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var token = cookie.Values["AccessToken"];
+            var url = "http://localhost:64873/api/household/GetHouseholds";
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var households = JsonConvert.DeserializeObject<List<HouseholdView>>(data);
+                var model = new householdSelectView();
+                 model.Household= new SelectList(households, "Id", "Name");
+                return View(model);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+                return View();
+            }
+            
+        }
+
+        [HttpPost]
+        public ActionResult CreateByHouseholdId(int HouseholdId)
+        {
+            return RedirectToAction("Create", "Transaction", new { id = HouseholdId });
+        }
+
+        //[HttpPost]
+        //public ActionResult CreateByHouseholdId()
+        //{
+        //    var cookie = Request.Cookies["MyCookie"];
+        //    if (cookie == null)
+        //    {
+        //        return RedirectToAction("Login", "Account");
+        //    }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    var token = cookie.Values["AccessToken"];
+        //    var parameters = new List<KeyValuePair<string, string>>();
+        //    parameters.Add(new KeyValuePair<string, string>("HouseholdId", model.HouseholdId.ToString()));
+        //    parameters.Add(new KeyValuePair<string, string>("Name", model.Name));
+        //    parameters.Add(new KeyValuePair<string, string>("Description", model.Description));
+        //    var encodedParameters = new FormUrlEncodedContent(parameters);
+        //    var httpClient = new HttpClient();
+        //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+
+            //    var response = httpClient.PostAsync("http://localhost:64873/api/BankAccount/create", encodedParameters).Result;
+            //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            //    {
+            //        return RedirectToAction("GetBankAccounts");
+            //    }
+
+            //    else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            //    {
+            //        var data = response.Content.ReadAsStringAsync().Result;
+            //        var errors = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+            //        foreach (var key in errors.ModelState)
+            //        {
+            //            foreach (var error in key.Value)
+            //            {
+            //                ModelState.AddModelError(key.Key, error);
+            //            }
+            //        }
+            //        return View(model);
+            //    }
+            //    else
+            //    {
+            //        ModelState.AddModelError("", "An unexpected error has occured. Please try again later");
+            //        return View(model);
+            //    }
+
+            //}
+
+        [HttpGet]
+        public ActionResult Create(int id)
         {
             var cookie = Request.Cookies["MyCookie"];
             if (cookie == null)
@@ -31,8 +117,8 @@ namespace HouseholdBudgeter_Mvc.Controllers
             }
 
             var token = cookie.Values["AccessToken"];
-            var GetBankAccountUrl = "http://localhost:64873/api/BankAccount/GetBankAccountsSelectList";
-            var GetCategoryUrl = "http://localhost:64873/api/Category/GetCategoriesSelectList";
+            var GetBankAccountUrl = $"http://localhost:64873/api/BankAccount/GetBankAccountsSelectList/{id}";
+            var GetCategoryUrl = $"http://localhost:64873/api/Category/GetCategoriesSelectList/{id}";
 
             var GetBankAccountHttpClient = new HttpClient();
             var GetCategoryHttpClient = new HttpClient();
@@ -53,6 +139,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
                 model.BankAccount = new SelectList(bankAccounts, "Id", "Name");
                 model.Category = new SelectList(categories, "Id", "Name");
+                model.Date = DateTime.Now;
                 return View(model);
             }
             else
@@ -253,6 +340,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             }
         }
 
+        //[HttpPost]
         public ActionResult Delete(int? id)
         {
             if (!id.HasValue)
@@ -285,6 +373,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             }
         }
 
+        //[HttpPost]
         public ActionResult VoidTransaction(int? id)
         {
             if (!id.HasValue)
@@ -320,5 +409,113 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 return RedirectToAction("GetTranactions");
             }
         }
+
+        [HttpGet]
+        public ActionResult BankAccountDetails(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("GetHouseholds");
+            }
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return View();
+            }
+            var token = cookie.Values["AccessToken"];
+            var url = $"http://localhost:64873/api/Household/BankAccountDetails/{id}";
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var response = httpClient.GetAsync(url).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var data = response.Content.ReadAsStringAsync().Result;
+                var model = JsonConvert.DeserializeObject<List<HouseholdBankAccountDetailView>>(data);
+                return View("BankAccountDetails", model);
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+                return View();
+            }
+        }
+
+        //[HttpGet]
+        //public ActionResult BankAccountDetails(int? id)
+        //{
+        //    if (!id.HasValue)
+        //    {
+        //        return RedirectToAction("GetHouseholds");
+        //    }
+        //    var cookie = Request.Cookies["MyCookie"];
+        //    if (cookie == null)
+        //    {
+        //        return View();
+        //    }
+        //    var token = cookie.Values["AccessToken"];
+        //    var url = $"http://localhost:64873/api/Household/BankAccountDetails/{id}";
+        //    var httpClient = new HttpClient();
+        //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        //    var response = httpClient.GetAsync(url).Result;
+        //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        var data = response.Content.ReadAsStringAsync().Result;
+        //        var model = JsonConvert.DeserializeObject<List<ViewBankAccountView>>(data);
+        //        return View("BankAccountDetails", model);
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+        //        return View();
+        //    }
+        //}
+
+        //[HttpGet]
+        //public ActionResult TransactionDetails(int? id)
+        //{
+        //    if (!id.HasValue)
+        //    {
+        //        return RedirectToAction("GetHouseholds");
+        //    }
+        //    var cookie = Request.Cookies["MyCookie"];
+        //    if (cookie == null)
+        //    {
+        //        return View();
+        //    }
+        //    var token = cookie.Values["AccessToken"];
+        //    var url = $"http://localhost:64873/api/Household/TransactionDetails/{id}";
+        //    var httpClient = new HttpClient();
+        //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        //    var response = httpClient.GetAsync(url).Result;
+        //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        var data = response.Content.ReadAsStringAsync().Result;
+        //        var model = JsonConvert.DeserializeObject<List<HouseholdBankAccountTransactionDetailView>>(data);
+
+        //        var queryCategory = from item in model group item by item.CategoryName into newGroup orderby newGroup.Key select newGroup;
+        //        ViewBag.transaction = "";
+        //         foreach (var nameGroup in queryCategory)
+        //        {
+        //            decimal totalAmount = 0;
+        //            ViewBag.transaction += $"<div><strong>Categroy Name:</strong> {nameGroup.Key}</div>";
+        //            foreach (var record in nameGroup)
+        //            {
+        //                ViewBag.transaction += $"<tr>" +
+        //                    $"<td> { record.Id} </td >" +
+        //                    $"<td> { record.Title} </td>" +
+        //                    $"<td> { record.Amount} </td>" +
+        //                    $"<td> { record.CategoryName}</td></tr >";
+        //                totalAmount += record.Amount;
+        //            }
+        //            ViewBag.transaction += $"<strong>Total Amount:</strong> {totalAmount}";
+        //        }
+        //        return View("TransactionDetails");
+
+        //    }
+        //    else
+        //    {
+        //        ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+        //        return View();
+        //    }
     }
-}
+    }

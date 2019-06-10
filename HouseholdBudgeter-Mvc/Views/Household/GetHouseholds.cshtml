@@ -1,15 +1,8 @@
-﻿
-@model List<HouseholdView>
+﻿@model List<HouseholdView>
 @{
     ViewBag.Title = "Index";
 }
-@if (TempData["Message"] != null)
 
-{
-
-    <div class="alert alert-danger">@TempData["Message"]</div>
-
-}
 <div id="content-wrapper">
     <div class="container-fluid">
         <!-- DataTables Example -->
@@ -67,6 +60,11 @@
                                         <span> &emsp;</span>
                                         <a href="@Url.Action("Leave", "Household", new { id = record.Id })">
                                             <i class="fas fa-sign-out-alt"></i>
+                                        </a>
+
+                                        <span> &emsp;</span>
+                                        <a href="@Url.Action("BankAccountDetails", "Transaction", new { id = record.Id })">
+                                            <i class="fas fa-info"></i>
                                         </a>
                                     </td>
                                 </tr>

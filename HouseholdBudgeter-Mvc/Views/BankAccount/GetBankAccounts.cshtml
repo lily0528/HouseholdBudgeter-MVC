@@ -10,7 +10,6 @@
         <!-- DataTables Example -->
 
         <div class="card mb-3">
-
             <div class="card-header">
                 <div><a class="btn btn-primary" href="@Url.Action("Create")">Create New</a></div>
             </div>
@@ -53,6 +52,9 @@
                                         <span> &emsp;</span>
                                         <a href="@Url.Action("Delete", "BankAccount", new { id = record.Id })">
                                             <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                        <a href="@Url.Action("CalculateBalance", "BankAccount", new { id = record.Id })">
+                                            <i class="fas fa-calculator"></i>
                                         </a>
                                     }
                                 </td>

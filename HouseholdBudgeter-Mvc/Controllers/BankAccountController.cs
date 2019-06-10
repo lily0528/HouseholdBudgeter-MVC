@@ -238,5 +238,33 @@ namespace HouseholdBudgeter_Mvc.Controllers
                 return RedirectToAction("GetBankAccounts");
             }
         }
+
+        
+        public ActionResult CalculateBalance(int id)
+        {
+            var cookie = Request.Cookies["MyCookie"];
+            if (cookie == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            var token = cookie.Values["AccessToken"];
+            var url = $"http://localhost:64873/api/BankAccount/CalculateBalance/{id}";
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            var parameters = new List<KeyValuePair<string, string>>();
+            parameters.Add(new KeyValuePair<string, string>("Id", id.ToString()));
+            var encodedParameters = new FormUrlEncodedContent(parameters);
+            var response = httpClient.PostAsync(url, encodedParameters).Result;
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return View("GetBankAccounts");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Sorry. An unexpected error has occured. Please try again later");
+                return View();
+            }
+        }
     }
 }
