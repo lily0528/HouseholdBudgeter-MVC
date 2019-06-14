@@ -67,7 +67,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 var data = response.Content.ReadAsStringAsync().Result;
                 var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
-                return View();
+                return View(model);
             }
             return View("Error");
         }

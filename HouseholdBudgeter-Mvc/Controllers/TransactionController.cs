@@ -112,7 +112,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
              {    var bankAccounts = new List<BankAccountView>();
                 var categories = new List<CategoryView>();
                 model.BankAccount = new SelectList(bankAccounts, "Id", "Name");
-                           model.Category = new SelectList(categories, "Id", "Name");
+                model.Category = new SelectList(categories, "Id", "Name");
 
                 return View(model);
             }

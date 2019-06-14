@@ -11,6 +11,7 @@ namespace HouseholdBudgeter_Mvc.Models.BankAccount
         public int Id { get; set; }
         [Required]
         public int HouseholdId { get; set; }
+        public string HouseholdName { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
