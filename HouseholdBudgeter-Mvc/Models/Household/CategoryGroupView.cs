@@ -10,11 +10,11 @@ namespace HouseholdBudgeter_Mvc.Models.Household
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public decimal CategoryAmount { get; set; }
-        public List<HouseholdBankAccountTransactionDetailView> Transactions { get; set; }
+        //public List<HouseholdBankAccountTransactionDetailView> Transactions { get; set; }
 
-        public CategoryGroupView()
-        {
-            Transactions = new List<HouseholdBankAccountTransactionDetailView>();
-        }
+        //public CategoryGroupView()
+        //{
+        //    Transactions = new List<HouseholdBankAccountTransactionDetailView>();
+        //}
     }
 }

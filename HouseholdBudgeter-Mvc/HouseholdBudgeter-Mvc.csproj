@@ -1933,7 +1933,7 @@
     <Content Include="Views\Transaction\Create.cshtml" />
     <Content Include="Views\Transaction\GetTransactions.cshtml" />
     <Content Include="Views\Transaction\Edit.cshtml" />
-    <Content Include="Views\Transaction\BankAccountDetails.cshtml" />
+    <Content Include="Views\Transaction\BankAccountSummary.cshtml" />
     <Content Include="Views\Transaction\TransactionDetails.cshtml" />
     <Content Include="Views\Household\Summary.cshtml" />
     <Content Include="Views\Transaction\CreateByHouseholdId.cshtml" />

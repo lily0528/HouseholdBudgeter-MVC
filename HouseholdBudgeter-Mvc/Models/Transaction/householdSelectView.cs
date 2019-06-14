@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace HouseholdBudgeter_Mvc.Models.Transaction
 {
-    public class householdSelectView
+    public class HouseholdSelectView
     {
         public int HouseholdId { get; set; }
         public SelectList Household { get; set; }

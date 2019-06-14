@@ -406,32 +406,32 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
         }
 
-        public ActionResult Summary(int? id)
-        {
-            var cookie = Request.Cookies["MyCookie"];
-            if (cookie == null)
-            {
-                return View();
-            }
-            var token = cookie.Values["AccessToken"];
-            var url = $"http://localhost:64873/api/Household/Summary/{id}";
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            var response = httpClient.GetAsync(url).Result;
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<HouseholdBankSummaryViewModel>(data);
-                result.TotalBalance = result.BankAccounts.Sum(b => b.Balance);
-                result.TotalSum = result.Categories.Sum(c => c.Sum);
-                return View("Summary", result);
-            }
-            else
-            {
-                var data = response.Content.ReadAsStringAsync().Result;
-                var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
-                return View("informationError", result);
-            }
-        }
+        //public ActionResult Summary(int? id)
+        //{
+        //    var cookie = Request.Cookies["MyCookie"];
+        //    if (cookie == null)
+        //    {
+        //        return View();
+        //    }
+        //    var token = cookie.Values["AccessToken"];
+        //    var url = $"http://localhost:64873/api/Household/Summary/{id}";
+        //    var httpClient = new HttpClient();
+        //    httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        //    var response = httpClient.GetAsync(url).Result;
+        //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        var data = response.Content.ReadAsStringAsync().Result;
+        //        var result = JsonConvert.DeserializeObject<HouseholdBankSummaryViewModel>(data);
+        //        result.TotalBalance = result.BankAccounts.Sum(b => b.Balance);
+        //        result.TotalSum = result.Categories.Sum(c => c.Sum);
+        //        return View("Summary", result);
+        //    }
+        //    else
+        //    {
+        //        var data = response.Content.ReadAsStringAsync().Result;
+        //        var result = JsonConvert.DeserializeObject<ApiErrorMessage>(data);
+        //        return View("informationError", result);
+        //    }
+        //}
     }
 }

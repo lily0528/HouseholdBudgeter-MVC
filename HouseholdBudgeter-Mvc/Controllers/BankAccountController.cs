@@ -258,7 +258,7 @@ namespace HouseholdBudgeter_Mvc.Controllers
             var response = httpClient.PostAsync(url, encodedParameters).Result;
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return View("GetBankAccounts");
+                return RedirectToAction("GetBankAccounts");
             }
             else
             {

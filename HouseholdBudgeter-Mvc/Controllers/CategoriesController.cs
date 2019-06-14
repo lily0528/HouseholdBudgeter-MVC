@@ -130,7 +130,6 @@ namespace HouseholdBudgeter_Mvc.Controllers
             {
                 return RedirectToAction("GetCategory");
             }
-
         }
 
         [HttpPost]

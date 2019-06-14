@@ -1,6 +1,6 @@
 ﻿@model List<HouseholdBankAccountDetailView>
 @{
-    ViewBag.Title = "BankAccountDetails";
+    ViewBag.Title = "BankAccountSummary";
 }
 
 <div class="card-header">
@@ -23,38 +23,28 @@
                 </tbody>
             </table>
 
-            foreach (var category in bankAccount.Categorys)
-            {
-                <div>
-                    <span><strong>Category Name:  </strong>@category.CategoryName</span><span>&emsp;&emsp;</span>
-                    <span><strong>Category Amount:  </strong>@category.CategoryAmount</span>
-                </div>
-
-
                 <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
                     <thead class="card-header">
                         <tr>
                             <th>Id</th>
-                            <th>Transaction Name</th>
+                            <th>Category Name</th>
                             <th>Amount</th>
 
                         </tr>
                     </thead>
                     <tbody>
 
-                        @foreach (var transaction in category.Transactions)
+                        @foreach (var category in bankAccount.Categorys)
                         {
                             <tr>
-                                <td>@transaction.Id</td>
-                                <td>@transaction.Title</td>
-                                <td>@transaction.Amount</td>
+                                <td>@category.CategoryId</td>
+                                <td>@category.CategoryName</td>
+                                <td>@category.CategoryAmount</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-            }
         }
-
     </div>
 </div>
 
