@@ -26,7 +26,7 @@
                 <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
                     <thead class="card-header">
                         <tr>
-                            <th>Id</th>
+                            @*<th>Id</th>*@
                             <th>Category Name</th>
                             <th>Amount</th>
 
@@ -37,7 +37,7 @@
                         @foreach (var category in bankAccount.Categorys)
                         {
                             <tr>
-                                <td>@category.CategoryId</td>
+                                @*<td>@category.CategoryId</td>*@
                                 <td>@category.CategoryName</td>
                                 <td>@category.CategoryAmount</td>
                             </tr>

@@ -197,9 +197,6 @@ namespace HouseholdBudgeter_Mvc.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-
-                //var data = response.Content.ReadAsStringAsync().Result;
-                //var result = JsonConvert.DeserializeObject<ChangePasswordBindingModel>(data);
                 ViewBag.Message = "Password has been changed successfully";
                 return RedirectToAction("Login", "UserManagement");
             }

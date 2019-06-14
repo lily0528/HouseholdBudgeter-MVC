@@ -198,8 +198,8 @@ namespace HouseholdBudgeter_Mvc.Controllers
             }
             var token = cookie.Values["AccessToken"];
             var url = $"http://localhost:64873/api/Transaction/Edit/{id}";
-            var GetBankAccountUrl = "http://localhost:64873/api/BankAccount/GetBankAccountsSelectList";
-            var GetCategoryUrl = "http://localhost:64873/api/Category/GetCategoriesSelectList";
+            var GetBankAccountUrl = $"http://localhost:64873/api/BankAccount/GetBankAccountsSelectListByTransaction/{id}";
+            var GetCategoryUrl = $"http://localhost:64873/api/Category/GetCategoriesSelectListByTransaction/{id}";
 
             var httpClient = new HttpClient();
             var GetBankAccountHttpClient = new HttpClient();

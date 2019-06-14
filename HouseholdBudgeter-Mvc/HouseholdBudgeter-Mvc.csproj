@@ -1935,7 +1935,6 @@
     <Content Include="Views\Transaction\Edit.cshtml" />
     <Content Include="Views\Transaction\BankAccountSummary.cshtml" />
     <Content Include="Views\Transaction\TransactionDetails.cshtml" />
-    <Content Include="Views\Household\Summary.cshtml" />
     <Content Include="Views\Transaction\CreateByHouseholdId.cshtml" />
   </ItemGroup>
   <ItemGroup>
